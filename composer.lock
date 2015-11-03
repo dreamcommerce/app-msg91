@@ -9,16 +9,16 @@
     "packages": [
         {
             "name": "dreamcommerce/shop-appstore-lib",
-            "version": "0.2.9",
+            "version": "0.2.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dreamcommerce/shop-appstore-lib.git",
-                "reference": "2d2209bfeb75e2c6b029f9433fa3f00730716e88"
+                "reference": "03074b7baa26f08ebb2f37917b061e6c45234d41"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamcommerce/shop-appstore-lib/zipball/2d2209bfeb75e2c6b029f9433fa3f00730716e88",
-                "reference": "2d2209bfeb75e2c6b029f9433fa3f00730716e88",
+                "url": "https://api.github.com/repos/dreamcommerce/shop-appstore-lib/zipball/03074b7baa26f08ebb2f37917b061e6c45234d41",
+                "reference": "03074b7baa26f08ebb2f37917b061e6c45234d41",
                 "shasum": ""
             },
             "require": {
@@ -46,7 +46,7 @@
                 }
             ],
             "description": "SDK for Dreamcommerce based shops REST-API",
-            "time": "2015-10-16 13:05:04"
+            "time": "2015-10-27 12:09:28"
         },
         {
             "name": "psr/log",

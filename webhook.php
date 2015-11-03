@@ -1,5 +1,6 @@
 <?php
 
+chdir(__DIR__);
 try {
 
     $config = require 'src/bootstrap.php';
@@ -13,7 +14,8 @@ try {
         $webhook->handleException($ex);
     }else{
         if(class_exists("\\DreamCommerce\\Logger")) {
-            \DreamCommerce\Logger::error($ex);
+            $logger = new \DreamCommerce\Logger;
+            $logger->error('Message: ' . $ex->getMessage() . '; code: ' . $ex->getCode() . '; stack trace: ' . $ex->getTraceAsString());
         }else{
             die($ex->getMessage());
         }
