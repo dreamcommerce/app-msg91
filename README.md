@@ -1,19 +1,10 @@
-app-template
+app-msg91
 ============
 
-This is a template for DreamCommerce Shop SDK.
 
-## overview
+### 1. overview
 
-Template could be used as a boilerplate for your own app used with our shops.
-
-
-
-## how to start
-
-### 1. obtain and install Application Tamplate
-
-Clone this repository or [download ZIP](https://github.com/dreamcommerce/app-template/archive/master.zip) with current version and extract its content to your application directory.
+Application sends text messages to clients.
 
 ### 2. obtain and install SDK
 
@@ -39,17 +30,13 @@ Make sure it's reachable from the Web and you have enabled a SSL support (app wo
 
 https://developers.dreamcommerce.com/developers/appstore/registration
 
-### 6. execute your app in store
-
-Click the adequate link in your shop and test your sample app. This boilerplate application dumps categories list from desired shop.
-
 ## components overview
 
 An application consists of two components: the Billing System and an Application.
 
 Billing System handles actions for install/uninstall and subscription. If your app is being installed to the shop, an App Store calls it with a request according to the manual: https://developers.dreamcommerce.com/developers/appstore/billing-system
 
-An Application handles actions for your purposes. Feel free to extend it!
+An Application handles actions for your purposes.
 
 ### ``billing_index.php``
 
