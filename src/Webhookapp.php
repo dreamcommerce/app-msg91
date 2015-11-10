@@ -79,40 +79,35 @@ class Webhookapp
      */
     public function validateWebhook()
     {
-        if( !function_exists('apache_request_headers') ) {
-            function apache_request_headers() {
-                $arh = array();
-                $rx_http = '/\AHTTP_/';
-                foreach($_SERVER as $key => $val) {
-                    if( preg_match($rx_http, $key) ) {
-                        $arh_key = preg_replace($rx_http, '', $key);
-                        $rx_matches = array();
-                        // do some nasty string manipulations to restore the original letter case
-                        // this should work in most cases
-                        $rx_matches = explode('_', $arh_key);
-                        if( count($rx_matches) > 0 and strlen($arh_key) > 2 ) {
-                            foreach($rx_matches as $ak_key => $ak_val) $rx_matches[$ak_key] = ucfirst($ak_val);
-                            $arh_key = implode('-', $rx_matches);
-                        }
-                        $arh[$arh_key] = $val;
+
+        if (!function_exists('getallheaders'))  {
+            function getallheaders()
+            {
+                if (!is_array($_SERVER)) {
+                    return array();
+                }
+
+                $headers = array();
+                foreach ($_SERVER as $name => $value) {
+                    if (substr($name, 0, 5) == 'HTTP_') {
+                        $headers[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value;
                     }
                 }
-                return( $arh );
+                return $headers;
             }
-
         }
-        
-        $headers = apache_request_headers();
-        
+
+        $headers = getallheaders();
+
         $this->params = array(
             'id' => $headers['X-Webhook-Id'],
             'name' => $headers['X-Webhook-Name'],
             'shop' => $headers['X-Shop-Domain'],
             'license' => $headers['X-Shop-License'],
             'sha1' => $headers['X-Webhook-Sha1'],
-        );        
-        
-        $secret_key = 'kjhKJHkjh876&*^';
+        );
+
+        $secret_key = $this->config['webhookSecretKey'];
         $jsondata = file_get_contents("php://input");
         $sha1 = sha1($this->params['id'] . ':' . $secret_key . ':' . $jsondata);
 
@@ -120,9 +115,10 @@ class Webhookapp
             file_put_contents('logs/webhooks.log', date('Y:m:d H:i:s'). ' Validation failed: bad checksum: ' . $sha1 . PHP_EOL, FILE_APPEND);
             die();
         }
-        
+
         $this->data = json_decode($jsondata, true);
-        
+
+
     }
     
     /**
