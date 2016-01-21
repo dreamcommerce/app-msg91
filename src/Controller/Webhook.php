@@ -101,6 +101,10 @@ class Webhook extends ControllerAbstract {
             return;
         }
         
+        if(mb_check_encoding($message, 'ASCII')){
+            $unicode = '0';
+        }
+
         //prepare query
         $variables = array(
             'authkey' => $authkey,

@@ -79,11 +79,11 @@ class App
     protected function dispatch()
     {
 
+        $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+        $path = ltrim($path, '/');
+
         // check for parameter existence
-        $query = empty($_GET['q']) ? 'index/index' : $_GET['q'];
-        if($query[0]=='/'){
-            $query = substr($query, 1);
-        }
+        $query = $path=='' ? 'index/index' : $path;
 
         $query = str_replace('\\', '', $query);
 
@@ -177,7 +177,7 @@ class App
 
         try {
             $db = $this->db();
-            $stmt = $db->prepare('update access_tokens set refresh_token=?, access_token=?, expires=? where shop_id=?');
+            $stmt = $db->prepare('update access_tokens set refresh_token=?, access_token=?, expires_at=? where shop_id=?');
             $stmt->execute(array($tokens['refresh_token'], $tokens['access_token'], $tokens['expires'], $tokens['shop']));
         } catch (PDOException $ex) {
             throw new Exception('Database error', 0, $ex);

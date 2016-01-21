@@ -69,7 +69,7 @@
             <section class="rwd-layout-col-12">
                 <div class="edition-form">
                     
-                    <form method="POST" action="<?php echo App::getUrl('index/index'); ?>">
+                    <form method="POST" action="<?php echo App::getUrl('/index/index'); ?>">
                         
                         <fieldset>
 

@@ -80,34 +80,34 @@ class Webhookapp
     public function validateWebhook()
     {
 
-        if (!function_exists('getallheaders'))  {
-            function getallheaders()
-            {
-                if (!is_array($_SERVER)) {
-                    return array();
-                }
-
-                $headers = array();
-                foreach ($_SERVER as $name => $value) {
-                    if (substr($name, 0, 5) == 'HTTP_') {
-                        $headers[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value;
-                    }
-                }
-                return $headers;
-            }
-        }
-
+	if (!function_exists('getallheaders'))  {
+	    function getallheaders()
+	    {
+	        if (!is_array($_SERVER)) {
+	            return array();
+	        }
+	
+	        $headers = array();
+	        foreach ($_SERVER as $name => $value) {
+	            if (substr($name, 0, 5) == 'HTTP_') {
+	                $headers[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value;
+	            }
+	        }
+	        return $headers;
+	    }
+	}
+        
         $headers = getallheaders();
-
+        
         $this->params = array(
             'id' => $headers['X-Webhook-Id'],
             'name' => $headers['X-Webhook-Name'],
             'shop' => $headers['X-Shop-Domain'],
             'license' => $headers['X-Shop-License'],
             'sha1' => $headers['X-Webhook-Sha1'],
-        );
-
-        $secret_key = $this->config['webhookSecretKey'];
+        );        
+        
+        $secret_key = 'kjhKJHkjh876&*^';
         $jsondata = file_get_contents("php://input");
         $sha1 = sha1($this->params['id'] . ':' . $secret_key . ':' . $jsondata);
 
@@ -115,10 +115,9 @@ class Webhookapp
             file_put_contents('logs/webhooks.log', date('Y:m:d H:i:s'). ' Validation failed: bad checksum: ' . $sha1 . PHP_EOL, FILE_APPEND);
             die();
         }
-
+        
         $this->data = json_decode($jsondata, true);
-
-
+        
     }
     
     /**
