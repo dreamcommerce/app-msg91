@@ -107,7 +107,7 @@ class Webhookapp
             'sha1' => $headers['X-Webhook-Sha1'],
         );        
         
-        $secret_key = 'kjhKJHkjh876&*^';
+        $secret_key = $this->config['webhookSecretKey'];
         $jsondata = file_get_contents("php://input");
         $sha1 = sha1($this->params['id'] . ':' . $secret_key . ':' . $jsondata);
 
