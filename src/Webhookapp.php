@@ -107,16 +107,24 @@ class Webhookapp
             'sha1' => $headers['X-Webhook-Sha1'],
         );        
         
-        $secret_key = $this->config['webhookSecretKey'];
-        $jsondata = file_get_contents("php://input");
-        $sha1 = sha1($this->params['id'] . ':' . $secret_key . ':' . $jsondata);
+        $appVersion = $this->getAppVersion($this->params['license']);
+
+        if ($appVersion > 15) {
+            $secretKey = hash_hmac('sha512', $this->params['license'] . ":" . $this->config['webhookSecretKey'], $this->config['appstoreSecret']);
+        } else {
+            $secretKey = $this->config['webhookSecretKeyOld'];
+        }
+        $jsonData = file_get_contents("php://input");
+        $sha1 = sha1($this->params['id'] . ':' . $secretKey . ':' . $jsonData);
 
         if ($sha1 != $this->params['sha1']) {
-            file_put_contents('logs/webhooks.log', date('Y:m:d H:i:s'). ' Validation failed: bad checksum: ' . $sha1 . PHP_EOL, FILE_APPEND);
-            die();
+            file_put_contents('logs/webhooks.log', date('Y:m:d H:i:s').' Validation failed '.$appVersion.' '.$headers['X-Shop-Domain'].' bad checksum: '.$sha1.PHP_EOL,FILE_APPEND);
+            exit();
+        } else {
+            file_put_contents('logs/webhooks.log', date('Y:m:d H:i:s').' OK '.$appVersion.' '.$headers['X-Shop-Domain'].' checksum: '.$sha1.PHP_EOL, FILE_APPEND);
         }
         
-        $this->data = json_decode($jsondata, true);
+        $this->data = json_decode($jsonData, true);
         
     }
     
@@ -150,6 +158,24 @@ class Webhookapp
         $result = $stmt->fetch();
         
         return $result['id'];
+
+    }
+
+    /**
+     * get installed shop info
+     * @param $license
+     * @return array|bool
+     */
+    public function getAppVersion($license)
+    {
+        $db = $this->db();
+        $stmt = $db->prepare('select version from shops where shop=:license');
+        if (!$stmt->execute(array(':license' => $license))) {
+            return false;
+        }
+        $result = $stmt->fetch();
+
+        return $result['version'];
 
     }
     
