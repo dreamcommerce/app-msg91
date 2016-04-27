@@ -1,7 +1,8 @@
 <?php
 // region i18n
 if(empty($_GET['locale'])) {
-    die();
+    @header($_SERVER['SERVER_PROTOCOL'] . ' 500 Internal Server Error', true, 500);
+    die('locale not set');
 }
 chdir(__DIR__);
 setlocale(LC_ALL, basename($_GET['locale']));
@@ -14,6 +15,7 @@ try {
     $app = new App($config);
     $app->bootstrap();
 }catch (\Exception $ex){
+    @header($_SERVER['SERVER_PROTOCOL'] . ' 500 Internal Server Error', true, 500);
     if($app instanceof App){
         $app->handleException($ex);
     }else{

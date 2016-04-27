@@ -15,6 +15,15 @@ return array(
      */
     'appstoreSecret' => '',
 
+    /*
+     * Application webhook secret
+     */
+    'webhookSecretKey' => '',
+
+    /*
+     * Application old webhook secret
+     */
+    'webhookSecretKeyOld' => '',
 
     'db' => array(
         /*

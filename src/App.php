@@ -79,11 +79,11 @@ class App
     protected function dispatch()
     {
 
+        $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+        $path = ltrim($path, '/');
+
         // check for parameter existence
-        $query = empty($_GET['q']) ? 'index/index' : $_GET['q'];
-        if($query[0]=='/'){
-            $query = substr($query, 1);
-        }
+        $query = $path=='' ? 'index/index' : $path;
 
         $query = str_replace('\\', '', $query);
 
@@ -127,7 +127,7 @@ class App
     {
 
         $c = new DreamCommerce\Client($shopData['url'], $this->config['appId'], $this->config['appSecret']);
-        $c->setAccessToken($shopData['token']);
+        $c->setAccessToken($shopData['access_token']);
 
         return $c;
     }
@@ -174,15 +174,25 @@ class App
     {
         $c = new DreamCommerce\Client($shopData['url'], $this->config['appId'], $this->config['appSecret']);
         $tokens = $c->refreshToken($shopData['refresh_token']);
+        $expirationDate = date('Y-m-d H:i:s', time() + $tokens['expires_in']);
 
         try {
             $db = $this->db();
-            $stmt = $db->prepare('update access_tokens set refresh_token=?, access_token=?, expires=? where shop_id=?');
-            $stmt->execute(array($tokens['refresh_token'], $tokens['access_token'], $tokens['expires'], $tokens['shop']));
+            $stmt = $db->prepare('update access_tokens set refresh_token=?, access_token=?, expires_at=? where shop_id=?');
+            $success = $stmt->execute(array($tokens['refresh_token'], $tokens['access_token'], $expirationDate, $shopData['id']));
+            if (!$success) {
+                file_put_contents(
+                    'logs/tokens.log',
+                    date("Y-m-d H:i:s") . ' Shop: '. var_export($shopData, true) . PHP_EOL . 'Tokens: '. var_export($tokens, true) . PHP_EOL,
+                    FILE_APPEND);
+            }
         } catch (PDOException $ex) {
+            file_put_contents(
+                'logs/tokens.log',
+                date("Y-m-d H:i:s") . ' Shop: '. var_export($shopData, true) . PHP_EOL . 'Tokens: '. var_export($tokens, true) . PHP_EOL,
+                FILE_APPEND);
             throw new Exception('Database error', 0, $ex);
         }
-
         $shopData['refresh_token'] = $tokens['refresh_token'];
         $shopData['access_token'] = $tokens['access_token'];
 
@@ -229,7 +239,7 @@ class App
     public function getShopData($shop)
     {
         $db = $this->db();
-        $stmt = $db->prepare('select a.access_token as token, a.refresh_token as refresh_token, s.shop_url as url, a.expires_at as expires, a.shop_id as id from access_tokens a join shops s on a.shop_id=s.id where s.shop=?');
+        $stmt = $db->prepare('select a.access_token as access_token, a.refresh_token as refresh_token, s.shop_url as url, a.expires_at as expires, a.shop_id as id from access_tokens a join shops s on a.shop_id=s.id where s.shop=?');
         if (!$stmt->execute(array($shop))) {
             return false;
         }

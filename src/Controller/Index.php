@@ -2,6 +2,44 @@
 namespace Controller;
 
 class Index extends ControllerAbstract{
+
+    public function testAction() {
+
+        $authkey = $this->app->escapeHtml($_POST['testAuthkey']);
+        $sender = $this->app->escapeHtml($_POST['testSender']);
+        $mobile = $this->app->escapeHtml($_POST['testMobile']);
+        $message = $this->app->escapeHtml($_POST['testMessage']);
+
+        $variables = array(
+            'authkey' => $authkey,
+            'mobiles' => $mobile,
+            'message' => $message,
+            'sender' => $sender,
+            'route' => 4,
+            'country' => 0,
+            'unicode' => 0
+        );
+        $query = http_build_query($variables);
+
+        $curl = curl_init();
+        $url = 'https://control.msg91.com/api/sendhttp.php?' . $query;
+
+        curl_setopt_array($curl, array(
+            CURLOPT_RETURNTRANSFER => 1,
+            CURLOPT_URL => $url,
+            CURLOPT_VERBOSE => 1,
+            CURLOPT_HEADER => 1
+        ));
+
+        $response = curl_exec($curl);
+
+        $header_size = curl_getinfo($curl, CURLINFO_HEADER_SIZE);
+        $this['header'] = substr($response, 0, $header_size);
+        $this['body'] = substr($response, $header_size);
+
+        curl_close($curl);
+
+    }
     
     public function indexAction() {
 
@@ -85,6 +123,7 @@ class Index extends ControllerAbstract{
             $this['settings'] = $config['settings'] = $settings;
             $this['authkey'] = $config['authkey'] = $this->app->escapeHtml($_POST['authkey']);
             $this['sender'] = $config['sender'] = $this->app->escapeHtml($_POST['sender']);
+            $this['route'] = $config['route'] = $this->app->escapeHtml($_POST['route']);
             
             // validate
             if(strlen($config['authkey'])==0){
@@ -142,6 +181,7 @@ class Index extends ControllerAbstract{
                 $config = unserialize($result['data']);
                 $this['authkey'] = $this->app->escapeHtml($config['authkey']);
                 $this['sender'] = $this->app->escapeHtml($config['sender']);
+                $this['route'] = $this->app->escapeHtml($config['route']);
                 foreach($settings as $key => $value){
                     if(!isset($config['settings'][$key])){
                         $config['settings'][$key] = $value;
@@ -161,6 +201,7 @@ class Index extends ControllerAbstract{
                 
                 $this['authkey'] = '';
                 $this['sender'] = '';
+                $this['route'] = '';
             }
             
         }

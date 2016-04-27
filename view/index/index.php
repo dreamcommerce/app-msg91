@@ -69,7 +69,7 @@
             <section class="rwd-layout-col-12">
                 <div class="edition-form">
                     
-                    <form method="POST" action="<?php echo App::getUrl('index/index'); ?>">
+                    <form method="POST" action="<?php echo App::getUrl('/index/index'); ?>">
                         
                         <fieldset>
 
@@ -116,7 +116,38 @@
                                 ?>
                                 </div>
                             </div>
-                            
+
+                            <div class="edition-form-line">
+                                <div class="edition-form-line-label">
+                                    <label for="route" class="aicon-required">Route:</label>
+                                </div>
+                                <div class="edition-form-line-field">
+                                    <div class="select-wrapper">
+                                        <select style="width:33%"name="route">
+                                            <?php
+                                            if($route == '') {
+                                                echo '<option selected="" value=""></option>';
+                                            }
+                                            if ($route == '1') {
+                                                echo '<option value="1" selected="">promotional</option>';
+                                                echo '<option value="4">transactional</option>';
+                                            } elseif ($route == '4') {
+                                                echo '<option value="1">promotional</option>';
+                                                echo '<option value="4" selected="">transactional</option>';
+                                            } else {
+                                                echo '<option value="1">promotional</option>';
+                                                echo '<option value="4">transactional</option>';
+                                            }
+                                            ?>
+                                        </select><div class="edition-form-comment">
+                                            <div class="edition-form-comment-content">
+                                                Choose route to use
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                         </fieldset>
                         
                         <fieldset>
@@ -244,6 +275,74 @@
                             </li>
                         </ul>
                     </div>
+
+                    <div style="border-bottom: 0.6em solid #1d4b6e"></div>
+                    <form method="POST" action="<?php echo App::getUrl('/index/test'); ?>">
+
+                        <fieldset>
+
+                            <header>Test message</header>
+
+                            <div class="edition-form-line">
+                                <div class="edition-form-line-label">
+                                    <label for="testAuthkey" class="aicon-required">Auth key:</label>
+                                </div>
+                                <div class="edition-form-line-field">
+                                    <input name="testAuthkey" id="testAuthkey" value="<?php echo $authkey; ?>" type="text" readonly="">
+                                </div>
+                            </div>
+
+                            <div class="edition-form-line">
+                                <div class="edition-form-line-label">
+                                    <label for="testSender" class="aicon-required">Sender:</label>
+                                </div>
+                                <div class="edition-form-line-field">
+                                    <input name="testSender" id="testSender" value="<?php echo $sender; ?>" type="text" readonly="">
+                                </div>
+                            </div>
+
+                            <div class="edition-form-line">
+                                <div class="edition-form-line-label">
+                                    <label for="testMessage" class="aicon-required">Message:</label>
+                                </div>
+                                <div class="edition-form-line-field">
+                                    <input name="testMessage" id="testMessage" value="Test message" type="text" readonly="">
+                                </div>
+                            </div>
+
+                            <div class="edition-form-line">
+                                <div class="edition-form-line-label">
+                                    <label for="testMessage" class="aicon-required">Route:</label>
+                                </div>
+                                <div class="edition-form-line-field">
+                                    <input name="testMessage" id="testMessage" value="<?php if (1==$route) { echo 'promotional'; } else { echo 'transactional'; } ?>" type="text" readonly="">
+                                </div>
+                            </div>
+
+                            <div class="edition-form-line">
+                                <div class="edition-form-line-label">
+                                    <label for="testMobile" class="aicon-required">Mobile:</label>
+                                </div>
+                                <div class="edition-form-line-field">
+                                    <input name="testMobile" id="testMobile" value="" type="text">
+                                    <div class="edition-form-comment">
+                                        <div class="edition-form-comment-content">
+                                            With country code at beginning
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </fieldset>
+
+                        <fieldset>
+                            <div class="edition-form-buttons">
+                                <button class="button button-bg button-larger button-important save-button" type="submit" name="save" value="1">Send test message</button>
+                            </div>
+                        </fieldset>
+
+                    </form>
+
                     <div class="clearfix"></div>
                 </div>
             </section>

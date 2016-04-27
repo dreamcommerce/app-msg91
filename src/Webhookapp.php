@@ -79,30 +79,25 @@ class Webhookapp
      */
     public function validateWebhook()
     {
-        if( !function_exists('apache_request_headers') ) {
-            function apache_request_headers() {
-                $arh = array();
-                $rx_http = '/\AHTTP_/';
-                foreach($_SERVER as $key => $val) {
-                    if( preg_match($rx_http, $key) ) {
-                        $arh_key = preg_replace($rx_http, '', $key);
-                        $rx_matches = array();
-                        // do some nasty string manipulations to restore the original letter case
-                        // this should work in most cases
-                        $rx_matches = explode('_', $arh_key);
-                        if( count($rx_matches) > 0 and strlen($arh_key) > 2 ) {
-                            foreach($rx_matches as $ak_key => $ak_val) $rx_matches[$ak_key] = ucfirst($ak_val);
-                            $arh_key = implode('-', $rx_matches);
-                        }
-                        $arh[$arh_key] = $val;
-                    }
-                }
-                return( $arh );
-            }
 
-        }
+	if (!function_exists('getallheaders'))  {
+	    function getallheaders()
+	    {
+	        if (!is_array($_SERVER)) {
+	            return array();
+	        }
+	
+	        $headers = array();
+	        foreach ($_SERVER as $name => $value) {
+	            if (substr($name, 0, 5) == 'HTTP_') {
+	                $headers[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value;
+	            }
+	        }
+	        return $headers;
+	    }
+	}
         
-        $headers = apache_request_headers();
+        $headers = getallheaders();
         
         $this->params = array(
             'id' => $headers['X-Webhook-Id'],
@@ -112,16 +107,21 @@ class Webhookapp
             'sha1' => $headers['X-Webhook-Sha1'],
         );        
         
-        $secret_key = 'kjhKJHkjh876&*^';
-        $jsondata = file_get_contents("php://input");
-        $sha1 = sha1($this->params['id'] . ':' . $secret_key . ':' . $jsondata);
+        $appVersion = $this->getAppVersion($this->params['license']);
+
+        if ($appVersion >= 15) {
+            $secretKey = hash_hmac('sha512', $this->params['license'] . ":" . $this->config['webhookSecretKey'], $this->config['appstoreSecret']);
+        } else {
+            $secretKey = $this->config['webhookSecretKeyOld'];
+        }
+        $jsonData = file_get_contents("php://input");
+        $sha1 = sha1($this->params['id'] . ':' . $secretKey . ':' . $jsonData);
 
         if ($sha1 != $this->params['sha1']) {
-            file_put_contents('logs/webhooks.log', date('Y:m:d H:i:s'). ' Validation failed: bad checksum: ' . $sha1 . PHP_EOL, FILE_APPEND);
-            die();
-        }
-        
-        $this->data = json_decode($jsondata, true);
+            file_put_contents('logs/webhooks.log', date('Y:m:d H:i:s').' Validation failed '.$appVersion.' '.$headers['X-Shop-Domain'].' bad checksum: '.$sha1.PHP_EOL,FILE_APPEND);
+            exit();
+        }     
+        $this->data = json_decode($jsonData, true);
         
     }
     
@@ -157,6 +157,24 @@ class Webhookapp
         return $result['id'];
 
     }
+
+    /**
+     * get installed shop info
+     * @param $license
+     * @return array|bool
+     */
+    public function getAppVersion($license)
+    {
+        $db = $this->db();
+        $stmt = $db->prepare('select version from shops where shop=:license');
+        if (!$stmt->execute(array(':license' => $license))) {
+            return false;
+        }
+        $result = $stmt->fetch();
+
+        return $result['version'];
+
+    }
     
     /**
      * instantiate db connection
@@ -174,16 +192,6 @@ class Webhookapp
         }
 
         return $handle;
-    }
-
-    /**
-     * shows more friendly exception message
-     * @param Exception $ex
-     */
-    public function handleException(\Exception $ex)
-    {
-        $message = $ex->getMessage();
-        require __DIR__ . '/../view/exception.php';
     }
 
     public static function escapeHtml($message){

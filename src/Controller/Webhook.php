@@ -32,6 +32,11 @@ class Webhook extends ControllerAbstract {
         // get required data
         $authkey = $data['authkey'];
         $sender = $data['sender'];
+        if (isset($data['route']) && ($data['route'] == 1 || $data['route'] = 4)) {
+            $route = $data['route'];
+        } else {
+            $route = '4';
+        }
         $settings = $data['settings'];
         $mobile = $webhook['billingAddress']['phone'];
         $country_code = strtoupper($webhook['billingAddress']['country_code']);
@@ -68,7 +73,6 @@ class Webhook extends ControllerAbstract {
                 }
             }
         }
-        $route = '4';
         $country = '0';
         $unicode = '1';
 
@@ -101,6 +105,10 @@ class Webhook extends ControllerAbstract {
             return;
         }
         
+        if(mb_check_encoding($message, 'ASCII')){
+            $unicode = '0';
+        }
+
         //prepare query
         $variables = array(
             'authkey' => $authkey,

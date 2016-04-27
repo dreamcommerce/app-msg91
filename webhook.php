@@ -9,16 +9,11 @@ try {
     $webhookapp->bootstrap();
 
 }catch (\Exception $ex){
-
-    if($webhook instanceof Webhook){
-        $webhook->handleException($ex);
+    @header($_SERVER['SERVER_PROTOCOL'] . ' 500 Internal Server Error', true, 500);
+    if(class_exists("\\DreamCommerce\\Logger")) {
+        $logger = new \DreamCommerce\Logger;
+        $logger->error('Message: ' . $ex->getMessage() . '; code: ' . $ex->getCode() . '; stack trace: ' . $ex->getTraceAsString());
     }else{
-        if(class_exists("\\DreamCommerce\\Logger")) {
-            $logger = new \DreamCommerce\Logger;
-            $logger->error('Message: ' . $ex->getMessage() . '; code: ' . $ex->getCode() . '; stack trace: ' . $ex->getTraceAsString());
-        }else{
-            die($ex->getMessage());
-        }
+        die($ex->getMessage());
     }
-
 }
