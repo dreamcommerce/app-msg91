@@ -38,7 +38,7 @@ class CronApp
     {
 
         $shopsToRefresh = $this->getShopsToRefresh();
-        echo var_export($shopsToRefresh, true);
+
         $this->refreshTokens($shopsToRefresh);
 
     }
