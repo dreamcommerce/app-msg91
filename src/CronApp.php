@@ -50,10 +50,11 @@ class CronApp
     public function getShopsToRefresh()
     {
         $expirationDate = date('Y-m-d H:i:s', time() + (86400 * 7));
+        $expirationDateFrom = date('Y-m-d H:i:s', time() - (86400 * 14));
         $shopsIds = array();
         $db = $this->db();
-        $stmt = $db->prepare('SELECT shop_id FROM access_tokens WHERE expires_at < ?');
-        $stmt->execute(array($expirationDate));
+        $stmt = $db->prepare('SELECT shop_id FROM access_tokens WHERE expires_at < ? AND expires_at > ?');
+        $stmt->execute(array($expirationDate, $expirationDateFrom));
         $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
         $resultIds = array();
         if (!!$result) {
