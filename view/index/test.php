@@ -65,7 +65,7 @@
         </script>
     </head>
     <body>
-        <main class="rwd-layout-width rwd-layout-container">
+        <main>
             <section class="rwd-layout-col-12">
                 <div class="edition-form">
 
