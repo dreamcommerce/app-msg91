@@ -1,6 +1,8 @@
 <?php
 namespace Controller;
 
+use DreamCommerce\ShopAppstoreLib\Resource;
+
 class Index extends ControllerAbstract{
 
     public function testAction() {
@@ -49,9 +51,10 @@ class Index extends ControllerAbstract{
         $this['translations'] = $translations = $this->app->getTranslations();
         
         // always get current settings of statuses in shop
+        $res = new Resource\Status($this->app->getClient());
         $pages = 1;
         for ($i = 1; $i <= $pages; $i++) {
-            $response = $this->app->getClient()->Status->get();
+            $response = $res->get();
             $pages = $response->getPageCount();
             foreach ($response as $status) {
                 
@@ -137,7 +140,8 @@ class Index extends ControllerAbstract{
             if (empty($errors)) {
                 
                 $langs = array();
-                $response = $this->app->getClient()->Language->get();
+                $res = new Resource\Language($this->app->getClient());
+                $response = $res->get();
                 foreach($response as $lang) {
                     $langs[$lang['lang_id']] = $lang['locale'];
                 }

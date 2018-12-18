@@ -1,5 +1,8 @@
 <?php
 
+use DreamCommerce\ShopAppstoreLib\Client;
+use DreamCommerce\ShopAppstoreLib\Client\OAuth;
+
 /**
  * Class App
  * example for xml importing
@@ -8,7 +11,7 @@ class CronApp
 {
 
     /**
-     * @var null|DreamCommerce\Client
+     * @var null|Client
      */
     protected $client = null;
 
@@ -127,11 +130,17 @@ class CronApp
     /**
      * instantiate client resource
      * @param $shopData
-     * @return \DreamCommerce\Client
+     * @return Client
      */
     public function instantiateClient($shopData)
     {
-        $c = new DreamCommerce\Client($shopData['url'], $this->config['appId'], $this->config['appSecret']);
+        /** @var OAuth|Client $c */
+        $c = Client::factory(Client::ADAPTER_OAUTH, array(
+                'entrypoint' => $shopData['url'],
+                'client_id' => $this->config['partnersConfig'][$shopData['partner']]['appId'],
+                'client_secret' => $this->config['partnersConfig'][$shopData['partner']]['appSecret'],
+                'refresh_token' => $shopData['refresh_token'])
+        );
         $c->setAccessToken($shopData['access_token']);
 
         return $c;
@@ -140,7 +149,7 @@ class CronApp
     /**
      * get client resource
      * @throws Exception
-     * @return \DreamCommerce\Client|null
+     * @return Client|null
      */
     public function getClient(){
         if($this->client===null){

@@ -19,8 +19,8 @@ try {
     if($app instanceof App){
         $app->handleException($ex);
     }else{
-        if(class_exists("\\DreamCommerce\\Logger")) {
-            $logger = new \DreamCommerce\Logger;
+        if(class_exists("\\DreamCommerce\\ShopAppstoreLib\\Logger")) {
+            $logger = new \DreamCommerce\ShopAppstoreLib\Logger;
             $logger->error('Message: ' . $ex->getMessage() . '; code: ' . $ex->getCode() . '; stack trace: ' . $ex->getTraceAsString());
         }else{
             die($ex->getMessage());

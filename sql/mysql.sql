@@ -1,9 +1,18 @@
--- --------------------------------------------------------
--- Host:                         192.168.56.101
--- Server version:               5.6.20-68.0 - Percona Server (GPL), Release 68.0, Revision 656
--- Server OS:                    debian-linux-gnu
--- HeidiSQL Version:             8.3.0.4694
--- --------------------------------------------------------
+-- Dumping structure for table app.shops
+CREATE TABLE IF NOT EXISTS `shops` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `shop` varchar(128) DEFAULT NULL,
+  `shop_url` varchar(512) DEFAULT NULL,
+  `version` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `shop` (`shop`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Dumping data for table app.shops: ~0 rows (approximately)
+/*!40000 ALTER TABLE `shops` DISABLE KEYS */;
+/*!40000 ALTER TABLE `shops` ENABLE KEYS */;
+
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET NAMES utf8 */;
@@ -41,22 +50,6 @@ CREATE TABLE IF NOT EXISTS `billings` (
 -- Dumping data for table app.billings: ~0 rows (approximately)
 /*!40000 ALTER TABLE `billings` DISABLE KEYS */;
 /*!40000 ALTER TABLE `billings` ENABLE KEYS */;
-
-
--- Dumping structure for table app.shops
-CREATE TABLE IF NOT EXISTS `shops` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `shop` varchar(128) DEFAULT NULL,
-  `shop_url` varchar(512) DEFAULT NULL,
-  `version` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `shop` (`shop`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- Dumping data for table app.shops: ~0 rows (approximately)
-/*!40000 ALTER TABLE `shops` DISABLE KEYS */;
-/*!40000 ALTER TABLE `shops` ENABLE KEYS */;
 
 
 -- Dumping structure for table app.subscriptions

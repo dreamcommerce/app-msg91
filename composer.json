@@ -2,8 +2,8 @@
     "name": "dreamcommerce/app-msg",
     "license": "MIT",
     "require": {
-        "php": ">=5.3.3",
-        "dreamcommerce/shop-appstore-lib": "0.2.*"
+        "php": ">=7.0.32",
+        "dreamcommerce/shop-appstore-lib": "^1.2"
     },
     "autoload": {
         "psr-4": {

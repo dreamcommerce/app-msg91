@@ -4,26 +4,26 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "541cf573964fe22cdf7800767ea30986",
-    "content-hash": "7b5c2ced1edc321735d105e7817febea",
+    "hash": "ce506ea5391058ce86264f0047c47ccf",
+    "content-hash": "be5831d442d082264bd48f2874646f85",
     "packages": [
         {
             "name": "dreamcommerce/shop-appstore-lib",
-            "version": "0.2.12",
+            "version": "1.2.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dreamcommerce/shop-appstore-lib.git",
-                "reference": "03074b7baa26f08ebb2f37917b061e6c45234d41"
+                "reference": "42dcf89394a55eb2a460cf8203a0e8be08c41391"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamcommerce/shop-appstore-lib/zipball/03074b7baa26f08ebb2f37917b061e6c45234d41",
-                "reference": "03074b7baa26f08ebb2f37917b061e6c45234d41",
+                "url": "https://api.github.com/repos/dreamcommerce/shop-appstore-lib/zipball/42dcf89394a55eb2a460cf8203a0e8be08c41391",
+                "reference": "42dcf89394a55eb2a460cf8203a0e8be08c41391",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.0",
-                "psr/log": "1.0.0"
+                "psr/log": "^1.0"
             },
             "type": "library",
             "autoload": {
@@ -38,34 +38,42 @@
             "authors": [
                 {
                     "name": "Przemysław eRIZ Pawliczuk",
-                    "email": "przemyslaw.pawliczuk@shoper.pl"
+                    "email": "przemyslaw.pawliczuk@dreamcommerce.com"
                 },
                 {
                     "name": "Michał Korus",
-                    "email": "michal.korus@shoper.pl"
+                    "email": "michal.korus@dreamcommerce.com"
                 }
             ],
             "description": "SDK for Dreamcommerce based shops REST-API",
-            "time": "2015-10-27 12:09:28"
+            "time": "2018-12-07 12:12:08"
         },
         {
             "name": "psr/log",
-            "version": "1.0.0",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/log.git",
-                "reference": "fe0936ee26643249e916849d48e3a51d5f5e278b"
+                "reference": "6c001f1daafa3a3ac1d8ff69ee4db8e799a654dd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/log/zipball/fe0936ee26643249e916849d48e3a51d5f5e278b",
-                "reference": "fe0936ee26643249e916849d48e3a51d5f5e278b",
+                "url": "https://api.github.com/repos/php-fig/log/zipball/6c001f1daafa3a3ac1d8ff69ee4db8e799a654dd",
+                "reference": "6c001f1daafa3a3ac1d8ff69ee4db8e799a654dd",
                 "shasum": ""
             },
+            "require": {
+                "php": ">=5.3.0"
+            },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
             "autoload": {
-                "psr-0": {
-                    "Psr\\Log\\": ""
+                "psr-4": {
+                    "Psr\\Log\\": "Psr/Log/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -79,12 +87,13 @@
                 }
             ],
             "description": "Common interface for logging libraries",
+            "homepage": "https://github.com/php-fig/log",
             "keywords": [
                 "log",
                 "psr",
                 "psr-3"
             ],
-            "time": "2012-12-21 11:40:51"
+            "time": "2018-11-20 15:27:04"
         }
     ],
     "packages-dev": [],

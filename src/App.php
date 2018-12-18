@@ -1,5 +1,8 @@
 <?php
 
+use DreamCommerce\ShopAppstoreLib\Client;
+use DreamCommerce\ShopAppstoreLib\Client\OAuth;
+
 /**
  * Class App
  * example for xml importing
@@ -8,7 +11,7 @@ class App
 {
 
     /**
-     * @var null|DreamCommerce\Client
+     * @var null|Client
      */
     protected $client = null;
     /**
@@ -121,12 +124,17 @@ class App
     /**
      * instantiate client resource
      * @param $shopData
-     * @return \DreamCommerce\Client
+     * @return Client
      */
     public function instantiateClient($shopData)
     {
 
-        $c = new DreamCommerce\Client($shopData['url'], $this->config['appId'], $this->config['appSecret']);
+        /** @var OAuth|Client $c */
+        $c = Client::factory(Client::ADAPTER_OAUTH, array(
+                'entrypoint' => $shopData['url'],
+                'client_id' => $this->config['appId'],
+                'client_secret' => $this->config['appSecret'])
+        );
         $c->setAccessToken($shopData['access_token']);
 
         return $c;
@@ -135,7 +143,7 @@ class App
     /**
      * get client resource
      * @throws Exception
-     * @return \DreamCommerce\Client|null
+     * @return Client|\DreamCommerce\ShopAppstoreLib\ClientInterface|null
      */
     public function getClient(){
         if($this->client===null){
@@ -172,8 +180,13 @@ class App
      */
     public function refreshToken($shopData)
     {
-        $c = new DreamCommerce\Client($shopData['url'], $this->config['appId'], $this->config['appSecret']);
-        $tokens = $c->refreshToken($shopData['refresh_token']);
+        $c = Client::factory(Client::ADAPTER_OAUTH, array(
+                'entrypoint' => $shopData['url'],
+                'client_id' => $this->config['appId'],
+                'client_secret' => $this->config['appSecret'],
+                'refresh_token' => $shopData['refresh_token'])
+        );
+        $tokens = $c->refreshTokens();
         $expirationDate = date('Y-m-d H:i:s', time() + $tokens['expires_in']);
 
         try {

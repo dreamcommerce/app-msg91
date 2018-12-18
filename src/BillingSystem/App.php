@@ -1,9 +1,9 @@
 <?php
 namespace BillingSystem;
 
-use DreamCommerce\Exception\ClientException;
-use DreamCommerce\Exception\HandlerException;
-use DreamCommerce\Handler;
+use DreamCommerce\ShopAppstoreLib\Handler;
+use DreamCommerce\ShopAppstoreLib\Exception\HandlerException;
+use DreamCommerce\ShopAppstoreLib\Client\Exception\Exception as ClientException;
 
 class App
 {
@@ -94,7 +94,9 @@ class App
 
             // get OAuth tokens
             try {
-                $tokens = $arguments['client']->getToken($arguments['auth_code']);
+                $client = $arguments['client'];
+                $client->setAuthCode($arguments['auth_code']);
+                $tokens = $client->authenticate(true);
             } catch (ClientException $ex) {
                 throw new \Exception('Client error', 0, $ex);
             }

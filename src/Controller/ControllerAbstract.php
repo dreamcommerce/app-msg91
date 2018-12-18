@@ -5,7 +5,7 @@ namespace Controller;
 class ControllerAbstract implements \ArrayAccess {
 
     /**
-     * @var App
+     * @var \App
      */
     protected $app;
 
