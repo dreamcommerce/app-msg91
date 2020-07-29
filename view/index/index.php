@@ -2,8 +2,8 @@
 <html>
     <head>
         <meta http-equiv="content-type" content="text/html; charset=utf-8">
-        <script type="text/javascript" src="//cdn.dcsaas.net/js/mootools.js"></script>
-        <script src="//cdn.dcsaas.net/js/appstore-sdk.js"></script>
+        <script type="text/javascript" src="//dcsaascdn.net/js/mootools.js"></script>
+        <script src="//dcsaascdn.net/js/appstore-sdk.js"></script>
 
         <script>
             (function () {
